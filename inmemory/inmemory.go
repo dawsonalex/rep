@@ -3,6 +3,7 @@ package inmemory
 
 import (
 	rep "github.com/dawsonalex/golang-cli"
+	"strings"
 	"sync"
 )
 
@@ -15,14 +16,14 @@ func (s *Store) AddSession(session *rep.Session) {
 	s.Lock()
 	defer s.Unlock()
 
-	s.sessions[session.Name()] = append(s.sessions[session.Name()], session)
+	s.sessions[nameToKey(session.Name())] = append(s.sessions[nameToKey(session.Name())], session)
 }
 
 func (s *Store) GetSessions(name string) []*rep.Session {
 	s.RLock()
 	defer s.RUnlock()
 
-	return s.sessions[name]
+	return s.sessions[nameToKey(name)]
 }
 
 func (s *Store) LastSession(name string) *rep.Session {
@@ -31,4 +32,8 @@ func (s *Store) LastSession(name string) *rep.Session {
 		return sessions[0]
 	}
 	return nil
+}
+
+func nameToKey(name string) string {
+	return strings.ToLower(strings.ReplaceAll(name, " ", "-"))
 }
