@@ -11,16 +11,16 @@ var ErrSessionInProgress = errors.New("already a session in progress")
 // Session is a named group of sets, with specific date and time of completion.
 type Session struct {
 	sync.RWMutex
-	name string
-	date time.Time
-	sets []Set
+	Name string
+	Date time.Time
+	Sets []Set
 }
 
 // Set defines a single set of an exercise.
 type Set struct {
-	repCount int
-	weight   int // The weight in Kg for the set.
-	rpe      int // Rate of perceived exertion for the set.
+	RepCount int
+	Weight   int // The weight in Kg for the set.
+	Rpe      int // Rate of perceived exertion for the set.
 }
 
 // Tracker manages a single session.
@@ -42,8 +42,8 @@ func (t *Tracker) BeginSession(name string) error {
 	t.sessionInProgress = true
 
 	t.session = &Session{
-		name: name,
-		date: time.Now(),
+		Name: name,
+		Date: time.Now(),
 	}
 	return nil
 }
@@ -64,9 +64,9 @@ func (t *Tracker) LogSet(repCount, weight, rpe int) {
 	defer t.Unlock()
 
 	t.session.logSet(Set{
-		repCount: repCount,
-		weight:   weight,
-		rpe:      rpe,
+		RepCount: repCount,
+		Weight:   weight,
+		Rpe:      rpe,
 	})
 }
 
@@ -74,17 +74,5 @@ func (s *Session) logSet(set Set) {
 	s.Lock()
 	defer s.Unlock()
 
-	s.sets = append(s.sets, set)
-}
-
-func (s *Session) Name() string {
-	return s.name
-}
-
-func (s *Session) Date() time.Time {
-	return s.date
-}
-
-func (s *Session) Sets() []Set {
-	return s.sets
+	s.Sets = append(s.Sets, set)
 }
