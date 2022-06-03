@@ -18,9 +18,25 @@ func TestSet(t *testing.T) {
 
 	tests := []test{
 		{
+			name:       "1-2-3-with-note",
+			text:       "1@2kg (3) *this*",
+			shouldPass: true,
+			reps:       1,
+			weight:     2,
+			rpe:        3,
+		},
+		{
 			name:       "1-2-3",
 			text:       "1@2kg (3)",
 			shouldPass: true,
+			reps:       1,
+			weight:     2,
+			rpe:        3,
+		},
+		{
+			name:       "note-in-wrong-place",
+			text:       "1@2kg *note* (3)",
+			shouldPass: false,
 			reps:       1,
 			weight:     2,
 			rpe:        3,

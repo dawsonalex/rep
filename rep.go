@@ -19,8 +19,9 @@ type Session struct {
 // Set defines a single set of an exercise.
 type Set struct {
 	RepCount int
-	Weight   int // The weight in Kg for the set.
-	Rpe      int // Rate of perceived exertion for the set.
+	Weight   int    // The weight in Kg for the set.
+	Rpe      int    // Rate of perceived exertion for the set.
+	Note     string // An arbitrary note for the set.
 }
 
 // Tracker manages a single session.
@@ -59,7 +60,7 @@ func (t *Tracker) EndSession() {
 }
 
 // LogSet logs a single set on the current session.
-func (t *Tracker) LogSet(repCount, weight, rpe int) {
+func (t *Tracker) LogSet(repCount, weight, rpe int, note string) {
 	t.Lock()
 	defer t.Unlock()
 
@@ -67,6 +68,7 @@ func (t *Tracker) LogSet(repCount, weight, rpe int) {
 		RepCount: repCount,
 		Weight:   weight,
 		Rpe:      rpe,
+		Note:     note,
 	})
 }
 

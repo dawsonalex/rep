@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var setPattern = regexp.MustCompile(`(\d+)@(\d+)kg\s*\((\d+)\)`)
+var setPattern = regexp.MustCompile(`(\d+)@(\d+)kg\s*\((\d+)\)\s*(?:\*(?:\w*\s*)*\*)?$`)
 
 var sessionHeaderPattern = regexp.MustCompile(`(\w+\s*):`)
 
