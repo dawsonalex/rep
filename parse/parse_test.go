@@ -14,6 +14,7 @@ func TestSet(t *testing.T) {
 		reps       int
 		weight     int
 		rpe        int
+		note       string
 	}
 
 	tests := []test{
@@ -24,6 +25,7 @@ func TestSet(t *testing.T) {
 			reps:       1,
 			weight:     2,
 			rpe:        3,
+			note:       "this",
 		},
 		{
 			name:       "1-2-3",
@@ -31,6 +33,14 @@ func TestSet(t *testing.T) {
 			shouldPass: true,
 			reps:       1,
 			weight:     2,
+			rpe:        3,
+		},
+		{
+			name:       "double digits",
+			text:       "11@21kg (3)",
+			shouldPass: true,
+			reps:       11,
+			weight:     21,
 			rpe:        3,
 		},
 		{

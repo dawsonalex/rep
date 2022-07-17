@@ -29,7 +29,9 @@ type Tracker struct {
 	sync.Mutex
 	session           *Session
 	sessionInProgress bool
-	CompletedSessions chan<- *Session //
+
+	subMux sync.Mutex      // mutex for reading from the subscriber slice
+	subs   []chan *Session // A slice of subscriber channels
 }
 
 // BeginSession starts a session with the given name
@@ -49,14 +51,14 @@ func (t *Tracker) BeginSession(name string) error {
 	return nil
 }
 
-// EndSession ends the current session.
-func (t *Tracker) EndSession() {
+// EndSession marks the current session as ended in the tracker, and sends it to CompletedSessions.
+func (t *Tracker) EndSession() *Session {
 	t.Lock()
 	defer t.Unlock()
 
 	t.sessionInProgress = false
-	// TODO: will this cause a deadlock if there isn't a receiver for the session?
-	t.CompletedSessions <- t.session
+
+	return t.session
 }
 
 // LogSet logs a single set on the current session.

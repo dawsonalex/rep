@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-var setPattern = regexp.MustCompile(`(\d+)@(\d+)kg\s*\((\d+)\)\s*(?:\*(?:\w*\s*)*\*)?$`)
+var setPattern = regexp.MustCompile(`(\d+)@(\d+)kg\s*\((\d+)\)\s*(?:\*(\w*\s*)*\*)?$`)
 
 var sessionHeaderPattern = regexp.MustCompile(`(\w+\s*):`)
 
@@ -29,7 +29,7 @@ func (e PatternError) Error() string {
 // Set returns a rep.Set from a string, and an error if one occurred.
 // set should be in the pattern `numberOfReps@weightkg (rpe)`.
 func Set(set string) (rep.Set, error) {
-	matches := setPattern.FindStringSubmatch(set)
+	matches := setPattern.FindStringSubmatch(strings.TrimSpace(set))
 	if len(matches) < 3 {
 		return rep.Set{}, setPatternError(set)
 	}
@@ -48,10 +48,16 @@ func Set(set string) (rep.Set, error) {
 		return rep.Set{}, err
 	}
 
+	note := ""
+	if len(matches) > 3 {
+		note = matches[4]
+	}
+
 	return rep.Set{
 		RepCount: reps,
 		Weight:   weight,
 		Rpe:      rpe,
+		Note:     note,
 	}, nil
 }
 
@@ -83,7 +89,7 @@ func Session(session string) (*rep.Session, error) {
 
 func setPatternError(got string) error {
 	return PatternError{
-		wanted: "rep_count@weightkg (rpe)",
+		wanted: "rep_count@weightkg (rpe) *note*",
 		got:    got,
 	}
 }
